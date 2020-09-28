@@ -13,12 +13,6 @@ public class Bullet : MonoBehaviour
     [HideInInspector]
     public bool createdByPlayer;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -50,6 +44,7 @@ public class Bullet : MonoBehaviour
                     Enemy enemy = collision.GetComponent<Enemy>();
                     enemy.Died();
                     Destroy(gameObject);
+                    PlayerManager.Instance.addScore(enemy.score);
                 }
                 break;
 
@@ -61,6 +56,12 @@ public class Bullet : MonoBehaviour
 
             // 不可销毁的障碍
             case "Barrier":
+                // 仅玩家子弹有效
+                if (createdByPlayer)
+                {
+                    Barrier barrier = collision.GetComponent<Barrier>();
+                    barrier.playHitAudio();
+                }
                 Destroy(gameObject);
                 break;
 

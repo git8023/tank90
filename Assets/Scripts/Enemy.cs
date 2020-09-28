@@ -21,7 +21,10 @@ public class Enemy : MonoBehaviour
     public GameObject explosionPrefab;
 
     [Header("移动转向时间")]
-    public float changeDirTime = 4;
+    public float changeDirTime = 3;
+
+    [Header("得分")]
+    public int score = 1;
 
     // 精灵渲染器
     private SpriteRenderer spriteRenderer;
@@ -44,13 +47,8 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        changeDirectionTimer = changeDirTime;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
+        // 敌人出生后直接向下走
+        moveVirtical = -1;
     }
 
     // Update is called once per frame
@@ -169,7 +167,7 @@ public class Enemy : MonoBehaviour
     // 相互碰撞后立即转向, 防止扎堆
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if ("Enemy".Equals(collision.gameObject.tag))
+        if (collision.gameObject.CompareTag("Enemy"))
         {
             changeDirectionTimer = changeDirTime;
         }

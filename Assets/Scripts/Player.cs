@@ -28,6 +28,12 @@ public class Player : MonoBehaviour
     [Header("无敌特效预制体")]
     public GameObject defendEffect;
 
+    [Header("音效播放器")]
+    public AudioSource audioSource;
+
+    [Header("音效: 0-闲置, 1-移动中")]
+    public AudioClip[] tankAudios;
+
     // 精灵渲染器
     private SpriteRenderer spriteRenderer;
 
@@ -62,6 +68,20 @@ public class Player : MonoBehaviour
             isDefend = defendTime > 0;
         }
         defendEffect.SetActive(isDefend);
+    }
+
+    // 固定帧率刷新
+    // 刚体碰撞时不会发生抖动现象
+    private void FixedUpdate()
+    {
+
+        // 总部被摧毁, 玩家不可再操作
+        if (PlayerManager.Instance.isDefeat)
+        {
+            return;
+        }
+
+        Move();
 
         // 攻击CD
         if (attackTimer >= bulletCd)
@@ -72,13 +92,6 @@ public class Player : MonoBehaviour
         {
             attackTimer += Time.deltaTime;
         }
-    }
-
-    // 固定帧率刷新
-    // 刚体碰撞时不会发生抖动现象
-    private void FixedUpdate()
-    {
-        Move();
     }
 
     // 发射子弹
@@ -119,29 +132,37 @@ public class Player : MonoBehaviour
         }
 
         // 防止斜方向移动
-        if (0 != v)
+        float h = 0;
+        if (0 == v)
         {
-            return;
+            // 监听水平方向
+            // Vector3.right: 右方向
+             h = Input.GetAxisRaw("Horizontal");
+            transform.Translate(Vector3.right * h * speed * Time.fixedDeltaTime, Space.World);
+            if (0 > h)
+            {
+                spriteRenderer.sprite = sprites[3];
+
+                // 2D与3D在X轴向相反
+                // 在2D中UI是从屏幕里面网外看
+                // 所有期望向左移动就需要使用(Z轴反向旋转)右朝向
+                bulletEulerAngles = new Vector3(0, 0, 90);
+            }
+            else if (0 < h)
+            {
+                spriteRenderer.sprite = sprites[1];
+                bulletEulerAngles = new Vector3(0, 0, -90);
+            }
         }
 
-        // 监听水平方向
-        // Vector3.right: 右方向
-        float h = Input.GetAxisRaw("Horizontal");
-        transform.Translate(Vector3.right * h * speed * Time.fixedDeltaTime, Space.World);
-        if (0 > h)
-        {
-            spriteRenderer.sprite = sprites[3];
-
-            // 2D与3D在X轴向相反
-            // 在2D中UI是从屏幕里面网外看
-            // 所有期望向左移动就需要使用(Z轴反向旋转)右朝向
-            bulletEulerAngles = new Vector3(0, 0, 90);
-        }
-        else if (0 < h)
-        {
-            spriteRenderer.sprite = sprites[1];
-            bulletEulerAngles = new Vector3(0, 0, -90);
-        }
+        // 播放音效
+        float bounds = 0.05f;
+        if (bounds < Mathf.Abs(v) || bounds < Mathf.Abs(h))
+            audioSource.clip = tankAudios[1];
+        else
+            audioSource.clip = tankAudios[0];
+        if (!audioSource.isPlaying)
+            audioSource.Play();
     }
 
     // 玩家死亡
@@ -158,5 +179,8 @@ public class Player : MonoBehaviour
 
         // 销毁游戏物体
         Destroy(gameObject);
+
+        // 通知玩家管理者, 玩家需要复活
+        PlayerManager.Instance.isDead = true;
     }
 }

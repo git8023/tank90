@@ -54,7 +54,9 @@ public class GameCreation : MonoBehaviour
         enemyBorns.Add(new Vector3(-10, 8, 0));
         enemyBorns.Add(new Vector3(0, 8, 0));
         enemyBorns.Add(new Vector3(10, 8, 0));
-        InvokeRepeating("CreateEnemy", 1, 2);
+
+        // TODO 创建敌人需要被优化
+        InvokeRepeating("CreateEnemy", 1, 5);
 
         // 玩家出生地
         GameObject player1 = createItem(prefabs[6], new Vector3(-2, -8, 0), Quaternion.identity);
