@@ -9,6 +9,7 @@ TagManager:
   - Barrier
   - Enemy
   - HQ
+  - Bullet
   layers:
   - Default
   - TransparentFX

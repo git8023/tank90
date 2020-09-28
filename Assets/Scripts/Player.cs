@@ -68,6 +68,18 @@ public class Player : MonoBehaviour
             isDefend = defendTime > 0;
         }
         defendEffect.SetActive(isDefend);
+
+
+        // 总部被摧毁, 玩家不可再操作
+        if (PlayerManager.Instance.isDefeat)
+        {
+            return;
+        }
+
+        // 攻击CD
+        attackTimer += Time.deltaTime;
+        if (attackTimer >= bulletCd)
+            Attack();
     }
 
     // 固定帧率刷新
@@ -83,15 +95,6 @@ public class Player : MonoBehaviour
 
         Move();
 
-        // 攻击CD
-        if (attackTimer >= bulletCd)
-        {
-            Attack();
-        }
-        else
-        {
-            attackTimer += Time.deltaTime;
-        }
     }
 
     // 发射子弹

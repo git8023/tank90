@@ -71,6 +71,12 @@ public class Bullet : MonoBehaviour
                 Destroy(gameObject);
                 hq.Died();
                 break;
+
+            // 子弹相互消耗
+            case "Bullet":
+                Destroy(gameObject);
+                Destroy(collision.gameObject);
+                break;
         }
     }
 }

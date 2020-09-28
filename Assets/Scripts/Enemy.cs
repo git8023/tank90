@@ -49,6 +49,9 @@ public class Enemy : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         // 敌人出生后直接向下走
         moveVirtical = -1;
+
+        // 把敌人添加到创建管理中
+        GameCreation.Instance.addEnemy(gameObject);
     }
 
     // Update is called once per frame
@@ -162,6 +165,9 @@ public class Enemy : MonoBehaviour
 
         // 销毁游戏物体
         Destroy(gameObject);
+
+        // 删除敌人
+        GameCreation.Instance.removeEnemy(gameObject);
     }
 
     // 相互碰撞后立即转向, 防止扎堆

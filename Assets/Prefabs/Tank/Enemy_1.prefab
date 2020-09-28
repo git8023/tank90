@@ -151,7 +151,8 @@ MonoBehaviour:
   - {fileID: 21300048, guid: 3348c3d1a93bce84fba2264f6a8458f4, type: 3}
   bulletPrefab: {fileID: 619853619048664361, guid: 624a8c908ca117846a7166d8b3fc1bc5,
     type: 3}
-  attackCd: 3
+  attackCd: 1
   explosionPrefab: {fileID: 682766564412668521, guid: e3fdfeccf11376141a1a1e567948b48f,
     type: 3}
   changeDirTime: 2
+  score: 1
