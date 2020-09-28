@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,11 +21,32 @@ public class GameCreation : MonoBehaviour
     [Header("关卡")]
     public Text missionLevelText;
 
+    [Header("游戏道具预制体")]
+    public GameObject gamePropPrefab;
+
+    [Header("墙数量")]
+    public int wallTotal = 50;
+
+    [Header("障碍数量")]
+    public int barrierTotal = 20;
+
+    [Header("绿地数量")]
+    public int grassTotal = 20;
+
+    [Header("河流数量")]
+    public int riverTotal = 10;
+
     // 单例实例
     private static GameCreation instance;
 
     // 敌人列表
     private List<GameObject> enemies = new List<GameObject>();
+
+    // 玩家列表
+    private List<GameObject> players = new List<GameObject>();
+
+    // 其他游戏物体
+    private List<GameObject> otherGameObjects = new List<GameObject>();
 
     // 已使用位置
     private List<Vector3> usedPositions = new List<Vector3>();
@@ -32,80 +54,103 @@ public class GameCreation : MonoBehaviour
     // 敌人出生地
     private List<Vector3> enemyBorns = new List<Vector3>();
 
+    // 总部防御系统
+    private List<GameObject> defenseShields = new List<GameObject>();
+
     // 现有敌人(包括正在生成的)数量
     private int currentEnemyTotal = 0;
 
     // 关卡
-    private int missionLevel = 1;
+    private int missionLevel = 0;
 
     // 敌人最大数量
     private int enemyTotal;
 
-    // 是否首次创建场景
-    private bool isInit = true;
+    // 是否需要生成游戏道具
+    public bool canGenGameProp;
 
     public static GameCreation Instance { get => instance; }
 
     private void Awake()
     {
-        isInit = true;
         instance = this;
         MissionCompletion();
+        canGenGameProp = true;
     }
 
+    // 关卡任务完成, 进入下一关
     private void MissionCompletion()
     {
         enemyTotal = enemyTotalConfig;
         missionLevel++;
 
+        // 清空所有游戏物体
+        ClearAllGameObjects();
+
         // 总部
-        createHQ();
+        CreateHQ();
 
         // 外围围墙(空气墙)
-        createAirBarrier();
+        CreateAirBarrier();
 
         // 创建坦克
-        createTanks();
+        CreateTanks();
 
         // 创建其他障碍物
         // 墙
         for (int i = 0; i < 50; i++)
         {
-            createItem(prefabs[1], RandomPosition(), Quaternion.identity);
+            CreateItem(prefabs[1], RandomPosition(), Quaternion.identity);
         }
         // 障碍
         for (int i = 0; i < 20; i++)
         {
-            createItem(prefabs[2], RandomPosition(), Quaternion.identity);
+            CreateItem(prefabs[2], RandomPosition(), Quaternion.identity);
         }
         // 绿地
         for (int i = 0; i < 30; i++)
         {
-            createItem(prefabs[3], RandomPosition(), Quaternion.identity);
+            CreateItem(prefabs[3], RandomPosition(), Quaternion.identity);
         }
         // 河流
         for (int i = 0; i < 20; i++)
         {
-            createItem(prefabs[4], RandomPosition(), Quaternion.identity);
+            CreateItem(prefabs[4], RandomPosition(), Quaternion.identity);
         }
 
-        isInit = false;
+    }
+
+    // 清空所有游戏物体
+    private void ClearAllGameObjects()
+    {
+        ClearGameObject(enemies);
+        ClearGameObject(players);
+        ClearGameObject(otherGameObjects);
+        ClearGameObject(defenseShields);
+        usedPositions.Clear();
+        enemyBorns.Clear();
+    }
+
+    // 销毁游戏物体
+    private void ClearGameObject(List<GameObject> gos)
+    {
+        for (int i = 0; i < gos.Count; i++)
+            Destroy(gos[i]);
+        gos.Clear();
     }
 
     // 创建坦克
-    private void createTanks()
+    private void CreateTanks()
     {
         // 敌人出生点
         enemyBorns.Add(new Vector3(-10, 8, 0));
         enemyBorns.Add(new Vector3(0, 8, 0));
         enemyBorns.Add(new Vector3(10, 8, 0));
 
-        if (isInit)
-        {
-            // 玩家出生地
-            GameObject player1 = createItem(prefabs[6], new Vector3(-2, -8, 0), Quaternion.identity);
-            player1.GetComponent<Born>().createPlayer = true;
-        }
+        // 玩家出生地
+        GameObject player1 = CreateItem(prefabs[6], new Vector3(-2, -8, 0), Quaternion.identity);
+        player1.GetComponent<Born>().createPlayer = true;
+        players.Add(player1);
     }
 
     private void Update()
@@ -114,6 +159,17 @@ public class GameCreation : MonoBehaviour
         missionLevelText.text = missionLevel.ToString();
 
         CreateEnemy();
+        GenGameProp();
+    }
+
+    // 生成游戏道具
+    private void GenGameProp()
+    {
+        if (canGenGameProp)
+        {
+            Instantiate(gamePropPrefab, transform.position, Quaternion.identity);
+            canGenGameProp = false;
+        }
     }
 
     // 创建敌人
@@ -121,8 +177,8 @@ public class GameCreation : MonoBehaviour
     {
         if (0 < enemyTotal && currentEnemyTotal < enemyCountInScene)
         {
-            int index = Random.Range(0, enemyBorns.Count);
-            GameObject enemy = createItem(prefabs[6], enemyBorns[index], Quaternion.identity);
+            int index = UnityEngine.Random.Range(0, enemyBorns.Count);
+            GameObject enemy = CreateItem(prefabs[6], enemyBorns[index], Quaternion.identity);
             enemy.GetComponent<Born>().createPlayer = false;
             enemyTotal--;
             currentEnemyTotal++;
@@ -130,13 +186,13 @@ public class GameCreation : MonoBehaviour
     }
 
     // 添加敌人
-    public void addEnemy(GameObject enemy)
+    public void AddEnemy(GameObject enemy)
     {
         enemies.Add(enemy);
     }
 
     // 删除敌人
-    public void removeEnemy(GameObject enemy)
+    public void RemoveEnemy(GameObject enemy)
     {
         enemies.Remove(enemy);
         currentEnemyTotal--;
@@ -148,31 +204,49 @@ public class GameCreation : MonoBehaviour
         }
     }
 
-    // 创建总部
-    private void createHQ()
+    // 添加玩家
+    public void AddPlayer(GameObject player)
     {
-        createItem(prefabs[0], new Vector3(0, -8, 0), Quaternion.identity);
-        createItem(prefabs[2], new Vector3(1, -8, 0), Quaternion.identity);
-        createItem(prefabs[2], new Vector3(-1, -8, 0), Quaternion.identity);
-        createItem(prefabs[2], new Vector3(-1, -7, 0), Quaternion.identity);
-        createItem(prefabs[2], new Vector3(0, -7, 0), Quaternion.identity);
-        createItem(prefabs[2], new Vector3(1, -7, 0), Quaternion.identity);
+        players.Add(player);
+    }
+
+    // 删除玩家
+    public void RemovePlayer(GameObject player)
+    {
+        players.Remove(player);
+    }
+
+    // 创建总部
+    private void CreateHQ()
+    {
+        CreateItem(prefabs[0], new Vector3(0, -8, 0), Quaternion.identity);
+        CreateDefenseShild(prefabs[1]);
+    }
+
+    // 建造防御工事
+    private void CreateDefenseShild(GameObject prefab)
+    {
+        defenseShields.Add(CreateItem(prefab, new Vector3(1, -8, 0), Quaternion.identity, false));
+        defenseShields.Add(CreateItem(prefab, new Vector3(-1, -8, 0), Quaternion.identity, false));
+        defenseShields.Add(CreateItem(prefab, new Vector3(-1, -7, 0), Quaternion.identity, false));
+        defenseShields.Add(CreateItem(prefab, new Vector3(0, -7, 0), Quaternion.identity, false));
+        defenseShields.Add(CreateItem(prefab, new Vector3(1, -7, 0), Quaternion.identity, false));
     }
 
     // 创建空气墙
-    private void createAirBarrier()
+    private void CreateAirBarrier()
     {
         // 上下
         for (int x = -11; x < 12; x++)
         {
-            createItem(prefabs[5], new Vector3(x, 9, 0), Quaternion.identity);
-            createItem(prefabs[5], new Vector3(x, -9, 0), Quaternion.identity);
+            CreateItem(prefabs[5], new Vector3(x, 9, 0), Quaternion.identity);
+            CreateItem(prefabs[5], new Vector3(x, -9, 0), Quaternion.identity);
         }
         // 左右
         for (int y = -8; y < 9; y++)
         {
-            createItem(prefabs[5], new Vector3(11, y, 0), Quaternion.identity);
-            createItem(prefabs[5], new Vector3(-11, y, 0), Quaternion.identity);
+            CreateItem(prefabs[5], new Vector3(11, y, 0), Quaternion.identity);
+            CreateItem(prefabs[5], new Vector3(-11, y, 0), Quaternion.identity);
         }
     }
 
@@ -180,11 +254,11 @@ public class GameCreation : MonoBehaviour
     // 导致敌人没法进攻
     // x[-10,10]
     // y[-8,8]
-    private Vector3 RandomPosition()
+    public Vector3 RandomPosition()
     {
         while (true)
         {
-            Vector3 pos = new Vector3(Random.Range(-9, 10), Random.Range(-7, 8), 0);
+            Vector3 pos = new Vector3(UnityEngine.Random.Range(-9, 10), UnityEngine.Random.Range(-7, 8), 0);
             if (!usedPositions.Contains(pos))
             {
                 return pos;
@@ -193,11 +267,34 @@ public class GameCreation : MonoBehaviour
     }
 
     // 创建游戏物体
-    private GameObject createItem(GameObject go, Vector3 position, Quaternion rotation)
+    private GameObject CreateItem(GameObject go, Vector3 position, Quaternion rotation)
+    {
+        return CreateItem(go, position, rotation, true);
+    }
+
+    // 创建游戏物体
+    private GameObject CreateItem(GameObject go, Vector3 position, Quaternion rotation, bool appendToOther)
     {
         GameObject item = Instantiate(go, position, rotation);
         item.transform.SetParent(transform);
         usedPositions.Add(position);
+        if (appendToOther)
+            otherGameObjects.Add(item);
         return item;
+    }
+
+    // 杀死所有敌人
+    public void BombAllEnemies()
+    {
+        for (int i = 0; i < enemies.Count; i++)
+            enemies[i].GetComponent<Enemy>().Died();
+        enemies.Clear();
+    }
+
+    // 防御工事升级
+    public void UpgradeDefenseShields()
+    {
+        ClearGameObject(defenseShields);
+        CreateDefenseShild(prefabs[2]);
     }
 }

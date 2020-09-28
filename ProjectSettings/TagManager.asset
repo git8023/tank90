@@ -10,6 +10,7 @@ TagManager:
   - Enemy
   - HQ
   - Bullet
+  - Prop
   layers:
   - Default
   - TransparentFX

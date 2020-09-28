@@ -51,7 +51,7 @@ public class Enemy : MonoBehaviour
         moveVirtical = -1;
 
         // 把敌人添加到创建管理中
-        GameCreation.Instance.addEnemy(gameObject);
+        GameCreation.Instance.AddEnemy(gameObject);
     }
 
     // Update is called once per frame
@@ -167,7 +167,7 @@ public class Enemy : MonoBehaviour
         Destroy(gameObject);
 
         // 删除敌人
-        GameCreation.Instance.removeEnemy(gameObject);
+        GameCreation.Instance.RemoveEnemy(gameObject);
     }
 
     // 相互碰撞后立即转向, 防止扎堆

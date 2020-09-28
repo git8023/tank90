@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
     public GameObject explosionPrefab;
 
     [Header("无敌时长")]
-    public float defendTime = 3;
+    public float defendTimeConfig = 3;
 
     [Header("无敌特效预制体")]
     public GameObject defendEffect;
@@ -46,15 +46,14 @@ public class Player : MonoBehaviour
     // 受保护标记
     private bool isDefend = true;
 
+    // 无敌时长
+    private float defendTime;
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
+        GameCreation.Instance.AddPlayer(gameObject);
+        StartDefend();
     }
 
     // Update is called once per frame
@@ -185,5 +184,15 @@ public class Player : MonoBehaviour
 
         // 通知玩家管理者, 玩家需要复活
         PlayerManager.Instance.isDead = true;
+
+        // 删除玩家引用
+        GameCreation.Instance.RemovePlayer(gameObject);
+    }
+
+    // 开启无敌
+    public void StartDefend()
+    {
+        defendTime = defendTimeConfig;
+        isDefend = true;
     }
 }
