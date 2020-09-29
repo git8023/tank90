@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Born : MonoBehaviour
 {
+    public enum BornType
+    {
+        PLAYER_1,
+        PLAYER_2
+    }
 
     [Header("玩家1")]
     public GameObject player1Prefab;
@@ -17,11 +22,18 @@ public class Born : MonoBehaviour
     [Header("玩家or敌人")]
     public bool createPlayer;
 
+    [Header("玩家类型")]
+    [HideInInspector]
+    public BornType playerType = BornType.PLAYER_1;
+
+    // 玩家游戏物体
+    private GameObject playerGo;
+
     // Start is called before the first frame update
     void Start()
     {
         // 延迟调用
-        Invoke("BornTank", duration);
+        Invoke(nameof(BornTank), duration);
         Destroy(gameObject, duration);
     }
 
@@ -29,7 +41,8 @@ public class Born : MonoBehaviour
     {
         if (createPlayer)
         {
-            Instantiate(player1Prefab, transform.position, Quaternion.identity);
+            playerGo = Instantiate(player1Prefab, transform.position, Quaternion.identity);
+            playerGo.GetComponent<Player>().type = playerType;
         }
         else
         {
@@ -38,4 +51,9 @@ public class Born : MonoBehaviour
         }
     }
 
+    // 设置为玩家类型
+    public void SetPlayerType(BornType type)
+    {
+        playerType = type;
+    }
 }

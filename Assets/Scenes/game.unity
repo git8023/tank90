@@ -156,8 +156,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 743.2, y: 157}
-  m_SizeDelta: {x: 38.5, y: 30}
+  m_AnchoredPosition: {x: 740, y: 157}
+  m_SizeDelta: {x: 32.10002, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &14711252
 MonoBehaviour:
@@ -191,7 +191,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u5173\u5361:"
+  m_Text: "\u5173\u5361"
 --- !u!222 &14711253
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -246,7 +246,8 @@ MonoBehaviour:
   lifeTimes: 3
   bornPrefab: {fileID: 9146419039580409572, guid: eadcae452e76cdb4099ae1b7afa77425,
     type: 3}
-  isDead: 0
+  isPlayer1Dead: 0
+  isPlayer2Dead: 0
   isDefeat: 0
   scoreText: {fileID: 996340130}
   lifeText: {fileID: 1051676532}
@@ -285,8 +286,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 38.3, y: -0.0000058129}
-  m_SizeDelta: {x: 38.5, y: 30}
+  m_AnchoredPosition: {x: 37.77, y: -0.0000058129}
+  m_SizeDelta: {x: 43.893333, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &198491112
 MonoBehaviour:
@@ -314,13 +315,13 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
-    m_Alignment: 3
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 1
+  m_Text: 999
 --- !u!222 &198491113
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -363,8 +364,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 32.25, y: 0.9}
-  m_SizeDelta: {x: 29.05, y: 30}
+  m_AnchoredPosition: {x: 39, y: 0.9}
+  m_SizeDelta: {x: 42.558475, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &436123860
 MonoBehaviour:
@@ -527,16 +528,16 @@ MonoBehaviour:
   - {fileID: 3097338527144547402, guid: aaf48804426a9bc469848d24e6ffbcbc, type: 3}
   - {fileID: 6211762428294663813, guid: fde99026e73d6f44a83fbd69b45f6e9f, type: 3}
   - {fileID: 9146419039580409572, guid: eadcae452e76cdb4099ae1b7afa77425, type: 3}
-  enemyTotalConfig: 5
-  enemyCountInScene: 1
+  enemyTotalConfig: 0
+  enemyCountInScene: 0
   residueEnemyCountText: {fileID: 436123860}
   missionLevelText: {fileID: 198491112}
   gamePropPrefab: {fileID: 5975154132478093920, guid: fe4e291c8015e63469668167e35eb586,
     type: 3}
-  wallTotal: 50
-  barrierTotal: 20
-  grassTotal: 20
-  riverTotal: 10
+  wallTotal: 0
+  barrierTotal: 0
+  grassTotal: 0
+  riverTotal: 0
   canGenGameProp: 1
 --- !u!4 &596301075
 Transform:
@@ -586,8 +587,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 32.25, y: 0}
-  m_SizeDelta: {x: 29.05, y: 30}
+  m_AnchoredPosition: {x: 39.6, y: 0}
+  m_SizeDelta: {x: 43.786366, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &996340130
 MonoBehaviour:
@@ -917,8 +918,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 32.25, y: 0.9}
-  m_SizeDelta: {x: 29.05, y: 30}
+  m_AnchoredPosition: {x: 38.4, y: 0.9}
+  m_SizeDelta: {x: 41.33028, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1051676532
 MonoBehaviour:

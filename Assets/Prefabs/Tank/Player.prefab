@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: -2462980104126740403}
   - component: {fileID: 1557589852}
   - component: {fileID: -1942615797775855138}
+  - component: {fileID: -1104437549754958515}
   m_Layer: 0
   m_Name: Player
   m_TagString: Tank
@@ -146,23 +147,158 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
-  sprites:
+  p1SpritesLevel1:
   - {fileID: 21300000, guid: c3a4b3c783ddce7438622efbc82d5538, type: 3}
   - {fileID: 21300016, guid: c3a4b3c783ddce7438622efbc82d5538, type: 3}
   - {fileID: 21300032, guid: c3a4b3c783ddce7438622efbc82d5538, type: 3}
   - {fileID: 21300048, guid: c3a4b3c783ddce7438622efbc82d5538, type: 3}
+  p1SpritesLevel2:
+  - {fileID: 21300004, guid: c3a4b3c783ddce7438622efbc82d5538, type: 3}
+  - {fileID: 21300020, guid: c3a4b3c783ddce7438622efbc82d5538, type: 3}
+  - {fileID: 21300036, guid: c3a4b3c783ddce7438622efbc82d5538, type: 3}
+  - {fileID: 21300052, guid: c3a4b3c783ddce7438622efbc82d5538, type: 3}
+  p1SpritesLevel3:
+  - {fileID: 21300008, guid: c3a4b3c783ddce7438622efbc82d5538, type: 3}
+  - {fileID: 21300024, guid: c3a4b3c783ddce7438622efbc82d5538, type: 3}
+  - {fileID: 21300040, guid: c3a4b3c783ddce7438622efbc82d5538, type: 3}
+  - {fileID: 21300056, guid: c3a4b3c783ddce7438622efbc82d5538, type: 3}
+  p1SpritesLevel4:
+  - {fileID: 21300012, guid: c3a4b3c783ddce7438622efbc82d5538, type: 3}
+  - {fileID: 21300028, guid: c3a4b3c783ddce7438622efbc82d5538, type: 3}
+  - {fileID: 21300044, guid: c3a4b3c783ddce7438622efbc82d5538, type: 3}
+  - {fileID: 21300060, guid: c3a4b3c783ddce7438622efbc82d5538, type: 3}
+  p2SpritesLevel1:
+  - {fileID: 21300000, guid: 55b011970cb6c1441be9af335e238fb6, type: 3}
+  - {fileID: 21300016, guid: 55b011970cb6c1441be9af335e238fb6, type: 3}
+  - {fileID: 21300032, guid: 55b011970cb6c1441be9af335e238fb6, type: 3}
+  - {fileID: 21300048, guid: 55b011970cb6c1441be9af335e238fb6, type: 3}
+  p2SpritesLevel2:
+  - {fileID: 21300004, guid: 55b011970cb6c1441be9af335e238fb6, type: 3}
+  - {fileID: 21300020, guid: 55b011970cb6c1441be9af335e238fb6, type: 3}
+  - {fileID: 21300036, guid: 55b011970cb6c1441be9af335e238fb6, type: 3}
+  - {fileID: 21300052, guid: 55b011970cb6c1441be9af335e238fb6, type: 3}
+  p2SpritesLevel3:
+  - {fileID: 21300008, guid: 55b011970cb6c1441be9af335e238fb6, type: 3}
+  - {fileID: 21300024, guid: 55b011970cb6c1441be9af335e238fb6, type: 3}
+  - {fileID: 21300040, guid: 55b011970cb6c1441be9af335e238fb6, type: 3}
+  - {fileID: 21300056, guid: 55b011970cb6c1441be9af335e238fb6, type: 3}
+  p2SpritesLevel4:
+  - {fileID: 21300012, guid: 55b011970cb6c1441be9af335e238fb6, type: 3}
+  - {fileID: 21300028, guid: 55b011970cb6c1441be9af335e238fb6, type: 3}
+  - {fileID: 21300044, guid: 55b011970cb6c1441be9af335e238fb6, type: 3}
+  - {fileID: 21300060, guid: 55b011970cb6c1441be9af335e238fb6, type: 3}
   bulletPrefab: {fileID: 619853619048664361, guid: fc5dc66d471fbfe47abeb91182e8ea5c,
     type: 3}
   bulletCd: 0.2
   explosionPrefab: {fileID: 682766564412668521, guid: e3fdfeccf11376141a1a1e567948b48f,
     type: 3}
-  defendTime: 3
+  defendTimeConfig: 3
   defendEffect: {fileID: 2303549051078257314}
   audioSource: {fileID: -1942615797775855138}
   tankAudios:
   - {fileID: 8300000, guid: c5cfdb88353725d4e80bb5a486606c9e, type: 3}
   - {fileID: 8300000, guid: 9e338ba8c87e0ba4aaf9d88ae7141118, type: 3}
+  fireLevel: 0
+  type: 0
+  bonusAudio: {fileID: 8300000, guid: 78ea59a2d35da144c983105394d01c64, type: 3}
+  bonusAudioSource: {fileID: -1104437549754958515}
 --- !u!82 &-1942615797775855138
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2303549050986909093}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!82 &-1104437549754958515
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

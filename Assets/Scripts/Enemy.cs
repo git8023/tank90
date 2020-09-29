@@ -44,6 +44,15 @@ public class Enemy : MonoBehaviour
     // 左右移动
     float moveHorizontal = 0;
 
+    // 暂停移动/攻击
+    public bool isPause;
+
+    // 暂停计时器
+    private float pauseTimer;
+
+    // 暂停最大时长
+    private const float MAX_PAUSE_TIME = 3;
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -58,6 +67,13 @@ public class Enemy : MonoBehaviour
     // 不固定帧刷新
     void Update()
     {
+        if (isPause)
+        {
+            pauseTimer += Time.deltaTime;
+            isPause = MAX_PAUSE_TIME > pauseTimer;
+            return;
+        }
+
         // 攻击CD
         if (attackTimer >= attackCd)
         {
@@ -73,6 +89,8 @@ public class Enemy : MonoBehaviour
     // 刚体碰撞时不会发生抖动现象
     private void FixedUpdate()
     {
+        if (isPause)
+            return;
         Move();
     }
 
@@ -99,7 +117,7 @@ public class Enemy : MonoBehaviour
         {
             changeDirectionTimer = 0;
             int dirNum = Random.Range(0, 6);
-            switch(dirNum)
+            switch (dirNum)
             {
                 case 0:
                     moveVirtical = 0;
@@ -157,7 +175,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // 玩家死亡
+    // 敌人死亡
     public void Died()
     {
         // 播放爆炸特效

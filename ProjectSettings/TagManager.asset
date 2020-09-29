@@ -11,6 +11,7 @@ TagManager:
   - HQ
   - Bullet
   - Prop
+  - AirBarrier
   layers:
   - Default
   - TransparentFX

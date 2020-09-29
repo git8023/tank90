@@ -15,9 +15,13 @@ public class PlayerManager : MonoBehaviour
     [Header("玩家出生地")]
     public GameObject bornPrefab;
 
-    // 玩家死亡标记
+    // 玩家1死亡标记
     [HideInInspector]
-    public bool isDead = false;
+    public bool isPlayer1Dead = false;
+
+    // 玩家2死亡标记
+    [HideInInspector]
+    public bool isPlayer2Dead = false;
 
     // 游戏失败
     [HideInInspector]
@@ -53,19 +57,18 @@ public class PlayerManager : MonoBehaviour
         if (isDefeat)
         {
             gameOverUI.SetActive(true);
-            Invoke("returnToMainScene", 3);
+            Invoke(nameof(ReturnToMainScene), 3);
             return;
         }
 
         // 每一帧中检测玩家是否死亡
-        if (isDead)
+        if (isPlayer1Dead || isPlayer2Dead)
             Recover();
     }
 
     // 复活或游戏结束
     private void Recover()
     {
-
         // 游戏结束
         if (lifeTimes <=0)
         {
@@ -76,18 +79,31 @@ public class PlayerManager : MonoBehaviour
         // 扣除复活次数并复活
         instance.lifeTimes--;
         GameObject playerGo = Instantiate(bornPrefab, new Vector3(-2, -8, 0),Quaternion.identity);
-        playerGo.GetComponent<Born>().createPlayer = true;
-        isDead = false;
+        Born born = playerGo.GetComponent<Born>();
+        born.createPlayer = true;
+        if (isPlayer1Dead)
+        {
+            isPlayer1Dead = false;
+            playerGo.transform.position = new Vector3(-2, -8, 0);
+            born.playerType = Born.BornType.PLAYER_1;
+        }
+        else
+        {
+            isPlayer2Dead = false;
+            playerGo.transform.position = new Vector3(2, -8, 0);
+            born.playerType = Born.BornType.PLAYER_2;
+        }
+
     }
 
     // 增加分数
-    public void addScore(int score)
+    public void AddScore(int score)
     {
         this.score += score;
     }
 
     // 返回到主界面
-    private void returnToMainScene()
+    private void ReturnToMainScene()
     {
         SceneManager.LoadScene(0);
     }

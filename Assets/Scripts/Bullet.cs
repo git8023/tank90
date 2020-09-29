@@ -13,6 +13,10 @@ public class Bullet : MonoBehaviour
     [HideInInspector]
     public bool createdByPlayer;
 
+    [Header("火力等级")]
+    [HideInInspector]
+    public int fireLevel;
+
     // Update is called once per frame
     void Update()
     {
@@ -44,7 +48,7 @@ public class Bullet : MonoBehaviour
                     Enemy enemy = collision.GetComponent<Enemy>();
                     enemy.Died();
                     Destroy(gameObject);
-                    PlayerManager.Instance.addScore(enemy.score);
+                    PlayerManager.Instance.AddScore(enemy.score);
                 }
                 break;
 
@@ -56,6 +60,21 @@ public class Bullet : MonoBehaviour
 
             // 不可销毁的障碍
             case "Barrier":
+                // 仅玩家子弹有效
+                if (createdByPlayer)
+                {
+                    Barrier barrier = collision.GetComponent<Barrier>();
+                    barrier.playHitAudio();
+
+                    // 最大火力可以摧毁障碍物
+                    if (Player.MAX_FILE_LEVEL == fireLevel)
+                        Destroy(collision.gameObject);
+                }
+                Destroy(gameObject);
+                break;
+
+            // 不可销毁的障碍
+            case "AirBarrier":
                 // 仅玩家子弹有效
                 if (createdByPlayer)
                 {

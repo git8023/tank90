@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Born;
 
 public class Player : MonoBehaviour
 {
@@ -9,9 +10,36 @@ public class Player : MonoBehaviour
     [Header("移动速度")]
     public float speed = 3;
 
-    [Header("坦克方向图")]
-    [Tooltip("上右下左")]
-    public Sprite[] sprites;
+
+
+    [Header("P1 Lv1")]
+    public Sprite[] p1SpritesLevel1;
+
+    [Header("P1 Lv2")]
+    public Sprite[] p1SpritesLevel2;
+
+    [Header("P1 Lv3")]
+    public Sprite[] p1SpritesLevel3;
+
+    [Header("P1 Lv4")]
+    public Sprite[] p1SpritesLevel4;
+
+
+
+    [Header("P2 Lv1")]
+    public Sprite[] p2SpritesLevel1;
+
+    [Header("P2 Lv2")]
+    public Sprite[] p2SpritesLevel2;
+
+    [Header("P2 Lv3")]
+    public Sprite[] p2SpritesLevel3;
+
+    [Header("P2 Lv4")]
+    public Sprite[] p2SpritesLevel4;
+
+
+
 
     [Header("子弹预制体")]
     public GameObject bulletPrefab;
@@ -34,6 +62,20 @@ public class Player : MonoBehaviour
     [Header("音效: 0-闲置, 1-移动中")]
     public AudioClip[] tankAudios;
 
+    [Header("火力等级")]
+    //[HideInInspector]
+    public int fireLevel;
+
+    [Header("玩家类型 1P or 2P")]
+    public BornType type;
+
+
+    [Header("道具音效")]
+    public AudioClip bonusAudio;
+
+    [Header("道具音效播放器")]
+    public AudioSource bonusAudioSource;
+
     // 精灵渲染器
     private SpriteRenderer spriteRenderer;
 
@@ -49,11 +91,22 @@ public class Player : MonoBehaviour
     // 无敌时长
     private float defendTime;
 
+    // 最大火力等级
+    public const int MAX_FILE_LEVEL = 4;
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         GameCreation.Instance.AddPlayer(gameObject);
+        fireLevel = 1;
         StartDefend();
+    }
+
+    // 播放道具音效
+    public void PlayGetBonus()
+    {
+        bonusAudioSource.clip = bonusAudio;
+        bonusAudioSource.Play();
     }
 
     // Update is called once per frame
@@ -100,7 +153,7 @@ public class Player : MonoBehaviour
     private void Attack()
     {
         // 按空格发射子弹
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(ValidPlayer1() ? KeyCode.Space : KeyCode.KeypadEnter))
         {
 
             // 每次攻击后清零攻击cd
@@ -111,16 +164,32 @@ public class Player : MonoBehaviour
             GameObject bulletObj = Instantiate(bulletPrefab, transform.position, Quaternion.Euler(transform.eulerAngles + bulletEulerAngles));
             Bullet bullet = bulletObj.GetComponent<Bullet>();
             bullet.createdByPlayer = true;
-
+            bullet.fireLevel = fireLevel;
         }
+    }
+
+    // 火力升级
+    public void UpgradeFire()
+    {
+        fireLevel = Math.Min(MAX_FILE_LEVEL, fireLevel + 1);
     }
 
     // 移动
     private void Move()
     {
+        bool isPlayer1 = ValidPlayer1();
+        Sprite[] sprites;
+        switch (fireLevel)
+        {
+            case 2: sprites = isPlayer1 ? p1SpritesLevel2 : p2SpritesLevel2; break;
+            case 3: sprites = isPlayer1 ? p1SpritesLevel3 : p2SpritesLevel3; break;
+            case 4: sprites = isPlayer1 ? p1SpritesLevel4 : p2SpritesLevel4; break;
+            default: sprites = isPlayer1 ? p1SpritesLevel1 : p2SpritesLevel1; break;
+        }
+
         // 监听垂直移动
         // Vectory3.up: 上方向
-        float v = Input.GetAxisRaw("Vertical");
+        float v = Input.GetAxisRaw(isPlayer1 ? "1P Vertical" : "2P Vertical");
         transform.Translate(Vector3.up * v * speed * Time.fixedDeltaTime, Space.World);
         if (0 > v)
         {
@@ -139,7 +208,7 @@ public class Player : MonoBehaviour
         {
             // 监听水平方向
             // Vector3.right: 右方向
-             h = Input.GetAxisRaw("Horizontal");
+            h = Input.GetAxisRaw(isPlayer1 ? "1P Horizontal" : "2P Horizontal");
             transform.Translate(Vector3.right * h * speed * Time.fixedDeltaTime, Space.World);
             if (0 > h)
             {
@@ -165,6 +234,13 @@ public class Player : MonoBehaviour
             audioSource.clip = tankAudios[0];
         if (!audioSource.isPlaying)
             audioSource.Play();
+
+    }
+
+    // 校验当前玩家是否1P
+    private bool ValidPlayer1()
+    {
+        return BornType.PLAYER_1 == type;
     }
 
     // 玩家死亡
@@ -176,6 +252,13 @@ public class Player : MonoBehaviour
             return;
         }
 
+        // 火力满级时抵消一次死亡
+        if (MAX_FILE_LEVEL == fireLevel)
+        {
+            fireLevel = 1;
+            return;
+        }
+
         // 播放爆炸特效
         Instantiate(explosionPrefab, transform.position, transform.rotation);
 
@@ -183,7 +266,10 @@ public class Player : MonoBehaviour
         Destroy(gameObject);
 
         // 通知玩家管理者, 玩家需要复活
-        PlayerManager.Instance.isDead = true;
+        if (ValidPlayer1())
+            PlayerManager.Instance.isPlayer1Dead = true;
+        else
+            PlayerManager.Instance.isPlayer2Dead = true;
 
         // 删除玩家引用
         GameCreation.Instance.RemovePlayer(gameObject);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static Born;
 
 public class GameCreation : MonoBehaviour
 {
@@ -36,26 +37,30 @@ public class GameCreation : MonoBehaviour
     [Header("河流数量")]
     public int riverTotal = 10;
 
+    // 玩家数量
+    [HideInInspector]
+    public static int playerCount;
+
     // 单例实例
     private static GameCreation instance;
 
     // 敌人列表
-    private List<GameObject> enemies = new List<GameObject>();
+    private readonly List<GameObject> enemies = new List<GameObject>();
 
     // 玩家列表
-    private List<GameObject> players = new List<GameObject>();
+    private readonly List<GameObject> players = new List<GameObject>();
 
     // 其他游戏物体
-    private List<GameObject> otherGameObjects = new List<GameObject>();
+    private readonly List<GameObject> otherGameObjects = new List<GameObject>();
 
     // 已使用位置
-    private List<Vector3> usedPositions = new List<Vector3>();
+    private readonly List<Vector3> usedPositions = new List<Vector3>();
 
     // 敌人出生地
-    private List<Vector3> enemyBorns = new List<Vector3>();
+    private readonly List<Vector3> enemyBorns = new List<Vector3>();
 
     // 总部防御系统
-    private List<GameObject> defenseShields = new List<GameObject>();
+    private readonly List<GameObject> defenseShields = new List<GameObject>();
 
     // 现有敌人(包括正在生成的)数量
     private int currentEnemyTotal = 0;
@@ -98,26 +103,32 @@ public class GameCreation : MonoBehaviour
 
         // 创建其他障碍物
         // 墙
-        for (int i = 0; i < 50; i++)
+        for (int i = 0; i < wallTotal; i++)
         {
             CreateItem(prefabs[1], RandomPosition(), Quaternion.identity);
         }
         // 障碍
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < barrierTotal; i++)
         {
             CreateItem(prefabs[2], RandomPosition(), Quaternion.identity);
         }
         // 绿地
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < grassTotal; i++)
         {
             CreateItem(prefabs[3], RandomPosition(), Quaternion.identity);
         }
         // 河流
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < riverTotal; i++)
         {
             CreateItem(prefabs[4], RandomPosition(), Quaternion.identity);
         }
+    }
 
+    // 暂停所有敌人活动
+    public void PauseAllEnemies()
+    {
+        for (int i = 0; i < enemies.Count; i++)
+            enemies[i].GetComponent<Enemy>().isPause = true;
     }
 
     // 清空所有游戏物体
@@ -146,11 +157,24 @@ public class GameCreation : MonoBehaviour
         enemyBorns.Add(new Vector3(-10, 8, 0));
         enemyBorns.Add(new Vector3(0, 8, 0));
         enemyBorns.Add(new Vector3(10, 8, 0));
+        CreateEnemy();
+        CreateEnemy();
+        CreateEnemy();
 
         // 玩家出生地
+        // 玩家1
         GameObject player1 = CreateItem(prefabs[6], new Vector3(-2, -8, 0), Quaternion.identity);
         player1.GetComponent<Born>().createPlayer = true;
         players.Add(player1);
+        // 玩家2
+        if (2 == playerCount)
+        {
+            GameObject player2 = CreateItem(prefabs[6], new Vector3(2, -8, 0), Quaternion.identity);
+            Born born = player2.GetComponent<Born>();
+            born.SetPlayerType(BornType.PLAYER_2);
+            born.createPlayer = true;
+            players.Add(player2);
+        }
     }
 
     private void Update()

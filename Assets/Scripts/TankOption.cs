@@ -11,14 +11,20 @@ public class TankOption : MonoBehaviour
     [Header("双人位置")]
     public Transform transformTwo;
 
+    [Header("联网对战位置")]
+    public Transform transformNetPlatform;
+
+    [Header("0-单人, 1-双人, 2-联网对战")]
+    public Transform[] transforms;
+
     // 玩家数量
     [HideInInspector]
-    public static int playerCount = 1;
+    public static int posIndex;
 
     // Start is called before the first frame update
     void Start()
     {
-        playerCount = 1;
+        posIndex = 0;
         transform.position = transformOne.position;
     }
 
@@ -27,20 +33,25 @@ public class TankOption : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
-            playerCount = 1;
-            transform.position = transformOne.position;
+            posIndex = Mathf.Max(0, posIndex - 1);
+            GameCreation.playerCount = 1;
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            playerCount = 2;
-            transform.position = transformTwo.position;
+            posIndex = Mathf.Min(transforms.Length - 1, posIndex + 1);
+            GameCreation.playerCount = 2;
         }
+
+        transform.position = transforms[posIndex].position;
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (1 == playerCount)
+            switch(posIndex)
             {
-                SceneManager.LoadScene(1);
+                case 0:
+                case 1:
+                    SceneManager.LoadScene(1);
+                    break;
             }
         }
     }

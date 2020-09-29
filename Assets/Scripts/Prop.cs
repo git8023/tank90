@@ -39,12 +39,6 @@ public class Prop : MonoBehaviour
         MAX
     }
 
-    [Header("音效")]
-    public AudioClip gotAudio;
-
-    [Header("音效播放器")]
-    public AudioSource audioSource;
-
     [Header("0-生命, 1-暂停, 2-工事, 3-炸弹, 4-火力升级, 5-无敌盾牌")]
     public Sprite[] sprites;
 
@@ -73,11 +67,8 @@ public class Prop : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Tank"))
         {
-            audioSource.clip = gotAudio;
-            audioSource.Play();
-            spriteRenderer.sprite = null;
-
             Player player = collision.GetComponent<Player>();
+            player.PlayGetBonus();
             Comsume(player);
         }
     }
@@ -95,6 +86,7 @@ public class Prop : MonoBehaviour
 
             /// 敌人暂停
             case PropType.PAUSE:
+                GameCreation.Instance.PauseAllEnemies();
                 break;
 
             /// 加强总部工事
@@ -109,6 +101,7 @@ public class Prop : MonoBehaviour
 
             /// 火力升级
             case PropType.FIRE_UPGRADE:
+                player.UpgradeFire();
                 break;
 
             /// 无敌盾牌
@@ -117,7 +110,7 @@ public class Prop : MonoBehaviour
                 break;
         }
 
-        Destroy(gameObject, 1f);
+        Destroy(gameObject);
         GameCreation.Instance.canGenGameProp = true;
     }
 }
