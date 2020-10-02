@@ -210,28 +210,33 @@ public class GameCreation : MonoBehaviour
     }
 
     // 添加敌人
-    public void AddEnemy(GameObject enemy)
+    public static void AddEnemy(GameObject enemy)
     {
-        enemies.Add(enemy);
+        if (null != instance)
+            instance.enemies.Add(enemy);
     }
 
     // 删除敌人
-    public void RemoveEnemy(GameObject enemy)
+    public static void RemoveEnemy(GameObject enemy)
     {
-        enemies.Remove(enemy);
-        currentEnemyTotal--;
-
-        // 消灭完所有敌人, 进入下一关
-        if (0 == enemyTotal)
+        if (null != instance)
         {
-            MissionCompletion();
+            instance.enemies.Remove(enemy);
+            instance.currentEnemyTotal--;
+
+            // 消灭完所有敌人, 进入下一关
+            if (0 == instance.enemyTotal)
+            {
+                instance.MissionCompletion();
+            }
         }
     }
 
     // 添加玩家
-    public void AddPlayer(GameObject player)
+    public static void AddPlayer(GameObject player)
     {
-        players.Add(player);
+        if (null != instance)
+            instance.players.Add(player);
     }
 
     // 删除玩家

@@ -52,6 +52,9 @@ public class TankOption : MonoBehaviour
                 case 1:
                     SceneManager.LoadScene(1);
                     break;
+                case 2:
+                    SceneManager.LoadScene(2);
+                    break;
             }
         }
     }

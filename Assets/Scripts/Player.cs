@@ -97,7 +97,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        GameCreation.Instance.AddPlayer(gameObject);
+        GameCreation.AddPlayer(gameObject);
         fireLevel = 1;
         StartDefend();
     }
@@ -123,7 +123,7 @@ public class Player : MonoBehaviour
 
 
         // 总部被摧毁, 玩家不可再操作
-        if (PlayerManager.Instance.isDefeat)
+        if (PlayerManager.CheckDefeat())
         {
             return;
         }
@@ -140,13 +140,12 @@ public class Player : MonoBehaviour
     {
 
         // 总部被摧毁, 玩家不可再操作
-        if (PlayerManager.Instance.isDefeat)
+        if (PlayerManager.CheckDefeat())
         {
             return;
         }
 
         Move();
-
     }
 
     // 发射子弹

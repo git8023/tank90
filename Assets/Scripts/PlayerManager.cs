@@ -70,7 +70,7 @@ public class PlayerManager : MonoBehaviour
     private void Recover()
     {
         // 游戏结束
-        if (lifeTimes <=0)
+        if (lifeTimes <= 0)
         {
             isDefeat = true;
             return;
@@ -78,7 +78,7 @@ public class PlayerManager : MonoBehaviour
 
         // 扣除复活次数并复活
         instance.lifeTimes--;
-        GameObject playerGo = Instantiate(bornPrefab, new Vector3(-2, -8, 0),Quaternion.identity);
+        GameObject playerGo = Instantiate(bornPrefab, new Vector3(-2, -8, 0), Quaternion.identity);
         Born born = playerGo.GetComponent<Born>();
         born.createPlayer = true;
         if (isPlayer1Dead)
@@ -108,4 +108,10 @@ public class PlayerManager : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
+    public static bool CheckDefeat()
+    {
+        if (null != instance)
+            return instance.isDefeat;
+        return false;
+    }
 }
